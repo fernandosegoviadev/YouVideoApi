@@ -18,9 +18,9 @@ export const loadApiEndpoints = (app: Application): void => {
     let { search } = req.query;
    
 
-    if (promisResul) {
-      return res.status(200).json(promisResul);
-    }
+    // if (promisResul) {
+    //   return res.status(200).json(promisResul);
+    // }
 
     console.log('sale el pedido a la api desde el back')
 
