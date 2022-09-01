@@ -7,7 +7,7 @@ const APY_KEY = process.env.APY_KEY_YOUTUBE
 var promisResul:any;
 
 export const loadApiEndpoints = (app: Application): void => {
-  app.get("/api", (req: Request, res: Response) => {
+  app.get("/", (req: Request, res: Response) => {
     return res.status(200).send(CoursesData);
   });
   
