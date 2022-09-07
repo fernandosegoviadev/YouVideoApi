@@ -1,5 +1,4 @@
 import { Application, Request, Response } from "express";
-import CoursesData from "../../data/courses.json";
 const axios = require("axios")
 require('dotenv').config();
 const APY_KEY = process.env.APY_KEY_YOUTUBE 
@@ -7,9 +6,7 @@ const APY_KEY = process.env.APY_KEY_YOUTUBE
 var promisResul:any;
 
 export const loadApiEndpoints = (app: Application): void => {
-  app.get("/", (req: Request, res: Response) => {
-    return res.status(200).send(CoursesData);
-  });
+
   
   app.get("/youtube", async (req: Request, res: Response) => {
 
