@@ -1,10 +1,12 @@
 import express from "express";
 import path from "path";
+import { loadApiEndpoints } from "./routes/api";
 
-import { loadApiEndpoints } from "./controllers/api";
 
 // Create Express server
 const app = express();
+
+require('./db.ts');
 
 // Express configuration
 app.set("port", process.env.PORT || 3001);
