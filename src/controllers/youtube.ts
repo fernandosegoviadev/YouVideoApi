@@ -9,44 +9,44 @@ var promisResul: any;
 
 /* Me trae resultados de la búsqueda por coincidencia de título. */
 export const getVideos = async (req: Request, res: Response) => {
-    
-    let { search } = req.query;
 
-    // console.log('sale el pedido a la api desde el back', search)
+  let { search } = req.query;
 
-    let youTubeApi = "https://youtube.googleapis.com/youtube/v3/search";
-    let part = "snippet";
-    let query = search;
+  // console.log('sale el pedido a la api desde el back', search)
 
-    const options = {
-      method: 'GET',
-      url: youTubeApi,
-      params: {
-        part: part,
-        q: query,
-        key: APY_KEY
-      },
-    };
+  let youTubeApi = "https://youtube.googleapis.com/youtube/v3/search";
+  let part = "snippet";
+  let query = search;
 
-    try {
-      promisResul = await axios.request(options)
-        .then(function (response: any) {
-          // console.log(response.data);
-          return response.data;
+  const options = {
+    method: 'GET',
+    url: youTubeApi,
+    params: {
+      part: part,
+      q: query,
+      key: APY_KEY
+    },
+  };
 
-        }).catch(function (error: any) {
+  try {
+    promisResul = await axios.request(options)
+      .then(function (response: any) {
+        // console.log(response.data);
+        return response.data;
 
-          console.error(error);
-          return error.data;
-        });
+      }).catch(function (error: any) {
 
-      return res.status(200).json(promisResul);
+        console.error(error);
+        return error.data;
+      });
 
-    } catch (error) {
+    return res.status(200).json(promisResul);
 
-      console.log(error);
-      return res.send('Ocurrió un error');
-    }
+  } catch (error) {
+
+    console.log(error);
+    return res.send('Ocurrió un error');
+  }
 
 
 }
