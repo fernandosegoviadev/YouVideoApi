@@ -9,7 +9,12 @@ export const getPlayLists = async (req: Request, res: Response) => {
         return res.status(200).json({ get: true, data: allPlayLists });
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
+        return res.status(400).json({
+            get: false,
+            data: null,
+            message: 'Error, get is not possible'
+        });
     }
 }
 
@@ -89,6 +94,12 @@ export const editPlayList = async (req: Request, res: Response) => {
 
     try {
         const filter = { _id: listId };
+        const updateVideo = { videos: [] };
+
+        await PlayLists.findOneAndUpdate(filter, updateVideo, {
+            new: true
+        });
+
         const update = req.body;
 
         let listUpdate = await PlayLists.findOneAndUpdate(filter, update, {
@@ -98,7 +109,7 @@ export const editPlayList = async (req: Request, res: Response) => {
         return res.status(200).json({ update: true, data: listUpdate });
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(400).json({
             update: false,
             data: error,
@@ -135,7 +146,7 @@ export const getListsByUserId = async (req: Request, res: Response) => {
         return res.status(200).json({ get: true, data: getLists });
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(400).json({
             get: false,
             data: error,
@@ -188,7 +199,7 @@ export const deletePlayList = async (req: Request, res: Response) => {
 
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return res.status(400).json({
             delete: false,
             data: error,
