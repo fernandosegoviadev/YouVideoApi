@@ -86,15 +86,19 @@ export const editPlayList = async (req: Request, res: Response) => {
             message: 'CreateBy is not an onbject Id'
         });
     }
-
-    if (!Array.isArray(videos)) {
-        return res.status(400).json({
-            message: 'Videos is not an array'
-        });
+    // console.log(videos, ' esto es videos en edit play list');
+    if (videos) {
+        if (!Array.isArray(videos)) {
+            return res.status(400).json({
+                message: 'Videos is not an array'
+            });
+        }
     }
 
-    // console.log('me llegan los datos necesarios a editList', req.body);
-
+    
+    // createBy trae el id del creador de la lista
+    // Ver si voy a poner una validación para asegurame que sea el creador
+    // sea el único que pueda solicitar una actualización
     try {
         const filter = { _id: listId };
         const updateVideo = { videos: [] };
@@ -111,6 +115,8 @@ export const editPlayList = async (req: Request, res: Response) => {
 
         return res.status(200).json({ update: true, data: listUpdate });
 
+        // return res.status(200).json({ update: false, data: req.body });
+
     } catch (error) {
         // console.log(error);
         return res.status(400).json({
@@ -123,7 +129,7 @@ export const editPlayList = async (req: Request, res: Response) => {
 }
 
 export const getListsByUserId = async (req: Request, res: Response) => {
-    let { userId } = req.body;
+    let { userId } = req.body;    
 
     if (!userId) {
         return res.status(200).json({
@@ -217,7 +223,7 @@ export const deletePlayList = async (req: Request, res: Response) => {
 export const getPlayListById = async (req: Request, res: Response) => {
     let { listId }: any = req.query;
 
-    console.log('llego getPlayListById', req.query)
+    // console.log('llego getPlayListById', req.query)
 
     if (!listId) {
         return res.status(200).json({
