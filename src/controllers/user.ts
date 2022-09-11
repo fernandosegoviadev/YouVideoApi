@@ -13,6 +13,12 @@ export const createUser = async (req: Request, res: Response) => {
     }
 
     try {
+        const user = await Users.findOne({ email });
+      
+        if (user) {
+            return res.status(200).json({ create: false, user: user });
+        }
+
         const userCreate = new Users({ name, email, image });
 
         await userCreate.save();
@@ -20,7 +26,8 @@ export const createUser = async (req: Request, res: Response) => {
         return res.status(200).json({ create: true, user: userCreate });
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
+        return res.status(400).json({ create: false, user: null });
     }
 }
 
@@ -33,7 +40,8 @@ export const getUsers = async (req: Request, res: Response) => {
         return res.status(200).json({ get: true, data: allUsers });
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
+        return res.status(400).json({ get: false, data: null });
     }
 
 }
