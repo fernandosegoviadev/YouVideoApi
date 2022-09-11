@@ -3,7 +3,7 @@ import { getVideos } from '../controllers/youtube';
 import { getChannel } from '../controllers/channel';
 import { createUser, getUsers } from '../controllers/user';
 import { createPlayList, editPlayList, getPlayLists,
-  getListsByUserId, deletePlayList } from "../controllers/playLists";
+  getListsByUserId, deletePlayList, getPlayListById } from "../controllers/playLists";
 
 
 export const loadApiEndpoints = (app: Application): void => {
@@ -34,18 +34,22 @@ export const loadApiEndpoints = (app: Application): void => {
   // Responde todas las listas
   //---------------------------------------------------------------------
   app.get("/playlists", getPlayLists);
-
+  
   // Crea una playlist en la DB
   //---------------------------------------------------------------------
   app.post("/playlist", createPlayList);
-
+  
   // Edita una playlist en la DB
   //---------------------------------------------------------------------
   app.put("/playlist", editPlayList);
-
+  
   // Elimina una playlist de la BD
   //---------------------------------------------------------------------
   app.delete("/playlist", deletePlayList);
+  
+  // Responde una lista solicitada por id
+  //---------------------------------------------------------------------
+  app.get("/playlist", getPlayListById);
 
 
   // Responde con todas las playlists creadas por el usuario

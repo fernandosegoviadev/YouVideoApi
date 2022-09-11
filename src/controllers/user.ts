@@ -13,6 +13,12 @@ export const createUser = async (req: Request, res: Response) => {
     }
 
     try {
+        const user = await Users.findOne({ email });
+      
+        if (user) {
+            return res.status(200).json({ create: false, user: user });
+        }
+
         const userCreate = new Users({ name, email, image });
 
         await userCreate.save();

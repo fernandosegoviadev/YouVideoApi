@@ -4,7 +4,10 @@ import { isValidObjectId } from '../helpers/isObject';
 
 export const getPlayLists = async (req: Request, res: Response) => {
     try {
-        const allPlayLists = await PlayLists.find({});
+        const allPlayLists = await PlayLists.aggregate([
+            { $project: { name: 1, description: 1, createBy: 1 } },
+            { $match: {} }
+        ])
 
         return res.status(200).json({ get: true, data: allPlayLists });
 
@@ -19,7 +22,7 @@ export const getPlayLists = async (req: Request, res: Response) => {
 }
 
 export const createPlayList = async (req: Request, res: Response) => {
-    // console.log('me llegan los datos necesarios a createLists', req.body);
+    console.log('me llegan los datos necesarios a createLists', req.body);
     // name:
     // description:
     // createBy: { // mongoose.SchemaTypes.ObjectId, 
@@ -42,10 +45,11 @@ export const createPlayList = async (req: Request, res: Response) => {
         });
     }
 
-    if (!Array.isArray(videos)) {
+    if (videos && !Array.isArray(videos)) {
         return res.status(400).json({
             message: 'Videos is not an array'
         });
+
     }
 
     try {
@@ -83,22 +87,25 @@ export const editPlayList = async (req: Request, res: Response) => {
             message: 'CreateBy is not an onbject Id'
         });
     }
+    // console.log(videos, ' esto es videos en edit play list');
+    if (videos && !Array.isArray(videos)) {
 
-    if (!Array.isArray(videos)) {
         return res.status(400).json({
             message: 'Videos is not an array'
         });
+
     }
 
-    // console.log('me llegan los datos necesarios a editList', req.body);
 
+    // createBy trae el id del creador de la lista
+    // Ver si voy a poner una validación para asegurame que sea el creador
+    // sea el único que pueda solicitar una actualización
     try {
         const filter = { _id: listId };
-        const updateVideo = { videos: [] };
-
-        await PlayLists.findOneAndUpdate(filter, updateVideo, {
-            new: true
-        });
+        //const updateVideo = { videos: [] };
+        //await PlayLists.findOneAndUpdate(filter, updateVideo, {
+        //    new: true
+        //});
 
         const update = req.body;
 
@@ -107,6 +114,8 @@ export const editPlayList = async (req: Request, res: Response) => {
         });
 
         return res.status(200).json({ update: true, data: listUpdate });
+
+        // return res.status(200).json({ update: false, data: req.body });
 
     } catch (error) {
         // console.log(error);
@@ -204,6 +213,58 @@ export const deletePlayList = async (req: Request, res: Response) => {
             delete: false,
             data: error,
             message: 'Error, delete is not possible'
+        });
+
+    }
+
+}
+
+
+export const getPlayListById = async (req: Request, res: Response) => {
+    let { listId }: any = req.query;
+
+    // console.log('llego getPlayListById', req.query)
+
+    if (!listId) {
+        return res.status(200).json({
+            get: false,
+            data: null,
+            message: 'ListId is necessary'
+        });
+    }
+
+    if (!isValidObjectId(listId)) {
+        return res.status(200).json({
+            get: false,
+            data: null,
+            message: 'ListId is not an onbject Id'
+        });
+    }
+
+    try {
+        const filter = { _id: listId };
+
+        let getOneList: any = await PlayLists.findOne(filter);
+
+        if (getOneList === null) {
+            return res.status(200).json({
+                get: false,
+                data: getOneList
+            });
+        }
+        if (getOneList) {
+            return res.status(200).json({
+                get: true,
+                data: getOneList
+            });
+        }
+
+    } catch (error) {
+        // console.log(error);
+        return res.status(400).json({
+            get: false,
+            data: error,
+            message: 'Error, get is not possible'
         });
 
     }
