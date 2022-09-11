@@ -22,7 +22,7 @@ export const getPlayLists = async (req: Request, res: Response) => {
 }
 
 export const createPlayList = async (req: Request, res: Response) => {
-    // console.log('me llegan los datos necesarios a createLists', req.body);
+    console.log('me llegan los datos necesarios a createLists', req.body);
     // name:
     // description:
     // createBy: { // mongoose.SchemaTypes.ObjectId, 
@@ -45,10 +45,11 @@ export const createPlayList = async (req: Request, res: Response) => {
         });
     }
 
-    if (!Array.isArray(videos)) {
+    if (videos && !Array.isArray(videos)) {
         return res.status(400).json({
             message: 'Videos is not an array'
         });
+
     }
 
     try {
@@ -87,25 +88,24 @@ export const editPlayList = async (req: Request, res: Response) => {
         });
     }
     // console.log(videos, ' esto es videos en edit play list');
-    if (videos) {
-        if (!Array.isArray(videos)) {
-            return res.status(400).json({
-                message: 'Videos is not an array'
-            });
-        }
+    if (videos && !Array.isArray(videos)) {
+
+        return res.status(400).json({
+            message: 'Videos is not an array'
+        });
+
     }
 
-    
+
     // createBy trae el id del creador de la lista
     // Ver si voy a poner una validación para asegurame que sea el creador
     // sea el único que pueda solicitar una actualización
     try {
         const filter = { _id: listId };
-        const updateVideo = { videos: [] };
-
-        await PlayLists.findOneAndUpdate(filter, updateVideo, {
-            new: true
-        });
+        //const updateVideo = { videos: [] };
+        //await PlayLists.findOneAndUpdate(filter, updateVideo, {
+        //    new: true
+        //});
 
         const update = req.body;
 
@@ -129,7 +129,7 @@ export const editPlayList = async (req: Request, res: Response) => {
 }
 
 export const getListsByUserId = async (req: Request, res: Response) => {
-    let { userId } = req.body;    
+    let { userId } = req.body;
 
     if (!userId) {
         return res.status(200).json({
